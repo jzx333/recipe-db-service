@@ -11,27 +11,27 @@ type Ingredient struct {
 }
 
 type Step struct {
-	Id   int    `json:"id"`
-	Step string `json:"step"`
+	Step int    `json:"step"`
+	Text string `json:"text"`
 }
 
-type SmallInfo struct {
+type RecipePreview struct {
 	Id     int    `json:"id"`
 	Name   string `json:"name"`
-	Time   string `json:"time"`
-	Budget string `json:"budget"`
+	Time   int    `json:"time"`
+	Budget int    `json:"budget"`
 	Tags   []Tag  `json:"tags"`
 	ImgSrc string `json:"imgsrc"`
 }
 
-type FullInfo struct {
+type RecipeDetails struct {
 	Id          int          `json:"id"`
 	Name        string       `json:"name"`
-	Calories    string       `json:"calories"`
-	Time        string       `json:"time"`
-	Budget      string       `json:"budget"`
+	Calories    int          `json:"calories"`
+	Time        int          `json:"time"`
+	Budget      int          `json:"budget"`
 	Tags        []Tag        `json:"tags"`
 	Ingredients []Ingredient `json:"ingredients"`
 	Steps       []Step       `json:"steps"`
-	Imgsrc      string       `json:"imgsrc"`
+	ImgSrc      string       `json:"imgsrc"`
 }
