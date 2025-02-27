@@ -1,9 +1,6 @@
 package dto
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
+import "time"
 
 type Ingredient struct {
 	Name     string `json:"name"`
@@ -16,14 +13,14 @@ type Step struct {
 }
 
 type Recipe struct {
-	gorm.Model
-	Id          int
-	Name        string
-	Calories    int
-	Time        int
-	Budget      int
-	Ingredients []Ingredient
-	Steps       []Step
-	ImgSrc      string
-	CreatedAt   time.Time
+	Id          int          `db:"id"`
+	Name        string       `db:"name"`
+	Tags        []Tag        `json:"tags"`
+	Calories    int          `db:"calories"`
+	Time        int          `db:"time"`
+	Budget      int          `db:"budget"`
+	Ingredients []Ingredient `db:"ingredients"`
+	Steps       []Step       `db:"steps"`
+	ImgSrc      string       `db:"imgsrc"`
+	CreatedAt   time.Time    `db:"created_at"`
 }

@@ -1,28 +1,58 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/jmoiron/sqlx"
+	"log"
 	"net/http"
 	"webServer/data"
+	"webServer/internal/recipes/repo"
 )
 
 func main() {
-	router := gin.Default()
 
-	sT := data.NewTagStore()
-	tagsHandler := NewTagHandler(sT)
+	// connect to db
+	ctx := context.Background()
+	dsn := "host=localhost port=5432 user=postgres password=prikolpronyra dbname=recipe_finder sslmode=disable"
+	dbpool, err := pgxpool.New(ctx, dsn)
+	if err != nil {
+		log.Fatalf("Error connecting to database: %v", err)
+	}
+	nativeDB := stdlib.OpenDBFromPool(dbpool)
+	sqlxDB := sqlx.NewDb(nativeDB, "pgx")
 
-	sS := data.NewSmallStore()
-	smallHandler := NewSmallHandler(sS)
+	r := repo.NewRepo(sqlxDB)
 
-	sF := data.NewFullStore()
-	fullHandler := NewFullHandler(sF)
+	res, err := r.TagsAll(ctx)
+	if err != nil {
+		log.Fatalf("Error fetching tags: %v", err)
+	}
 
-	router.GET("/tags", tagsHandler.GetTags)
-	router.GET("/preview", smallHandler.GetSmall)
-	router.GET("/details", fullHandler.GetFull)
-
-	router.Run(":8080")
+	for _, tag := range res {
+		fmt.Println("%+v\n", *tag)
+	}
+	//// execute repo
+	//
+	//router := gin.Default()
+	//
+	//sT := data.NewTagStore()
+	//tagsHandler := NewTagHandler(sT)
+	//
+	//sS := data.NewSmallStore()
+	//smallHandler := NewSmallHandler(sS)
+	//
+	//sF := data.NewFullStore()
+	//fullHandler := NewFullHandler(sF)
+	//
+	//router.GET("/tags", tagsHandler.GetTags)
+	//router.GET("/preview", smallHandler.GetSmall)
+	//router.GET("/details", fullHandler.GetFull)
+	//
+	//router.Run(":8080")
 
 }
 

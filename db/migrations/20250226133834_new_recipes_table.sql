@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS recipes
 (
     id          SERIAL PRIMARY KEY,
-    name        TEXT      NOT NULL,
+    name        TEXT      NOT NULL UNIQUE,
     calories    INTEGER   NOT NULL,
     time        INTEGER   NOT NULL,
     budget      INTEGER   NOT NULL,
