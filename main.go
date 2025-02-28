@@ -27,14 +27,60 @@ func main() {
 
 	r := repo.NewRepo(sqlxDB)
 
-	res, err := r.TagsAll(ctx)
+	//nTag := dto.NewTag{
+	//	"Яйца",
+	//	"🥚",
+	//}
+	//
+	//res, err := r.TagCreate(ctx, &nTag)
+	//if err != nil {
+	//	log.Fatalf("Error creating tag: %v", err)
+	//}
+	//fmt.Println(res)
+
+	//ingr := []dto.Ingredient{
+	//	{"Мука", "300 г"},
+	//	{"Яйцо", "2 шт"},
+	//}
+	//
+	//steps := []dto.Step{
+	//	{1, "В глубокую миску наливаем молоко, разбиваем яйцо"},
+	//	{2, "Что-то там налили"},
+	//}
+	//
+	//tags := []int{
+	//	1, 2, 4,
+	//}
+	//
+	//test := dto.NewRecipe{
+	//	"986967867", tags, 150, 30,
+	//	175, ingr, steps, "/path",
+	//}
+	//
+	//res2, err := r.RecipeCreate(ctx, &test)
+	//if err != nil {
+	//	log.Fatalf("Error creating recipe: %v", err)
+	//}
+	//fmt.Println(res2)
+
+	res3, err := r.TagsAll(ctx)
 	if err != nil {
 		log.Fatalf("Error fetching tags: %v", err)
 	}
 
-	for _, tag := range res {
-		fmt.Println("%+v\n", *tag)
+	for _, tag := range res3 {
+		fmt.Println(tag)
 	}
+
+	res4, err := r.RecipesAll(ctx)
+	if err != nil {
+		log.Fatalf("Error fetching recipes: %v", err)
+	}
+
+	for _, recipe := range res4 {
+		fmt.Println(recipe)
+	}
+
 	//// execute repo
 	//
 	//router := gin.Default()
