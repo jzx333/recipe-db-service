@@ -13,9 +13,9 @@ var (
 
 type RecipeRepo interface {
 	RecipesAll(ctx context.Context) ([]dto.Recipe, error)
-	RecipeCreate(ctx context.Context, recipe dto.Recipe) (int, error)
+	RecipeCreate(ctx context.Context, recipe *dto.Recipe) (int, error)
 	RecipeByName(ctx context.Context, name string) (*dto.Recipe, error)
-	RecipesByTags(ctx context.Context, tags []string) ([]dto.Recipe, error)
+	RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, error)
 	RecipesByBudget(ctx context.Context, budget int) ([]dto.Recipe, error)
 }
 
