@@ -42,7 +42,7 @@ func (steps *Steps) Scan(src interface{}) error {
 }
 
 type Recipe struct {
-	Id          int         `db:"id"`
+	Id          int         `db:"id" json:"id"`
 	Name        string      `db:"name"`
 	Calories    int         `db:"calories"`
 	Time        int         `db:"time"`

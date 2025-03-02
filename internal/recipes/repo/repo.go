@@ -86,7 +86,6 @@ func (r *Repo) RecipesAll(ctx context.Context) ([]dto.Recipe, error) {
 }
 
 func (r *Repo) RecipeCreate(ctx context.Context, recipe *dto.NewRecipe) (int, error) {
-
 	q, args, err := recipeCreateQuery.
 		Values(recipe.Name, recipe.Calories, recipe.Time, recipe.Budget, recipe.Ingredients,
 			recipe.Steps, recipe.ImgSrc).
@@ -118,9 +117,21 @@ func (r *Repo) RecipeCreate(ctx context.Context, recipe *dto.NewRecipe) (int, er
 	return recipeId, nil
 }
 
+func (r *Repo) RecipeById(ctx context.Context, id int) (*dto.Recipe, error) {
+	q, args := recipesAllQuery.Where(sq.Eq{"r.id": id}).Limit(1).MustSql()
+
+	var recipe dto.Recipe
+
+	if err := r.db.GetContext(ctx, &recipe, q, args...); err != nil {
+		return nil, ErrNotExist
+	}
+
+	return &recipe, nil
+
+}
+
 func (r *Repo) RecipeByName(ctx context.Context, name string) (*dto.Recipe, error) {
 	q, args := recipesAllQuery.Where(sq.Eq{"r.name": name}).Limit(1).MustSql()
-	fmt.Println(q, args)
 
 	var recipe dto.Recipe
 
@@ -137,7 +148,6 @@ func (r *Repo) RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, er
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(q, args)
 
 	var recipes []dto.Recipe
 

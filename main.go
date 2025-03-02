@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"webServer/data"
 	"webServer/internal/recipes/repo"
+	"webServer/internal/server"
 )
 
 func main() {
@@ -28,8 +29,8 @@ func main() {
 	r := repo.NewRepo(sqlxDB)
 
 	//nTag := dto.NewTag{
-	//	"Яйца",
-	//	"🥚",
+	//	"Хайп",
+	//	"☠️",
 	//}
 	//
 	//res, err := r.TagCreate(ctx, &nTag)
@@ -39,22 +40,30 @@ func main() {
 	//fmt.Println(res)
 
 	//ingr := []dto.Ingredient{
-	//	{"Мука", "300 г"},
-	//	{"Яйцо", "2 шт"},
+	//	{"Колесо", "4 штуки"},
+	//	{"Корпус", "1 штука"},
+	//	{"Пицца в багажник", "5 коробок"},
 	//}
+	//fmt.Println(res)
 	//
 	//steps := []dto.Step{
-	//	{1, "В глубокую миску наливаем молоко, разбиваем яйцо"},
-	//	{2, "Что-то там налили"},
+	//	{1, "Сядь за руль"},
+	//	{2, "Кайфуй"},
+	//	{3, "Едь"},
+	//	{4, "Едь"},
+	//	{5, "Едь"},
+	//	{6, "Едь"},
+	//	{7, "Тормози, куда гонишь"},
 	//}
 	//
 	//tags := []int{
-	//	1, 2, 4,
+	//	1,
 	//}
 	//
 	//test := dto.NewRecipe{
-	//	"986967867", tags, 150, 30,
-	//	175, ingr, steps, "/path",
+	//	"Хонда Сивик", tags, 154, 9999,
+	//	250000, ingr, steps,
+	//	"https://autogeizer.ru/wp-content/uploads/2021/08/honda-civic.jpg",
 	//}
 	//
 	//res2, err := r.RecipeCreate(ctx, &test)
@@ -62,6 +71,31 @@ func main() {
 	//	log.Fatalf("Error creating recipe: %v", err)
 	//}
 	//fmt.Println(res2)
+
+	//ingr = []dto.Ingredient{
+	//	{"Страшилка", "1 штука"},
+	//	{"Пугалка", "2 столовых ложки"},
+	//}
+	//
+	//steps = []dto.Step{
+	//	{1, "Страшно"},
+	//}
+	//
+	//tags = []int{
+	//	1, 2, 4,
+	//}
+	//
+	//test = dto.NewRecipe{
+	//	"Ёжиг", tags, 666, 111,
+	//	1500, ingr, steps,
+	//	"https://cs10.pikabu.ru/post_img/big/2019/11/06/8/1573044991158234281.jpg",
+	//}
+	//
+	//res3, err := r.RecipeCreate(ctx, &test)
+	//if err != nil {
+	//	log.Fatalf("Error creating recipe: %v", err)
+	//}
+	//fmt.Println(res3)
 
 	//res3, err := r.TagsAll(ctx)
 	//if err != nil {
@@ -105,6 +139,8 @@ func main() {
 	for _, recipe := range res7 {
 		fmt.Println(recipe)
 	}
+
+	server.Server(ctx, r)
 
 	//// execute repo
 	//
