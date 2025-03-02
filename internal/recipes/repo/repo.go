@@ -132,7 +132,8 @@ func (r *Repo) RecipeByName(ctx context.Context, name string) (*dto.Recipe, erro
 }
 
 func (r *Repo) RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, error) {
-	q, args, err := recipesAllQuery.Having(sq.Eq{"rt.tag_id": tags}).ToSql()
+	q, args, err := recipesAllQuery.Where(sq.Eq{"rt.tag_id": tags}).
+		Having("count(distinct rt.tag_id) = ?", len(tags)).ToSql()
 	if err != nil {
 		return nil, err
 	}

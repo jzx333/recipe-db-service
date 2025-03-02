@@ -97,7 +97,7 @@ func main() {
 		fmt.Println(recipe)
 	}
 
-	res7, err := r.RecipesByTags(ctx, 4)
+	res7, err := r.RecipesByTags(ctx, 1, 2, 4)
 	if err != nil {
 		log.Fatalf("Error fetching recipes: %v", err)
 	}
