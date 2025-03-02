@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/db/migrations/20250226133834_new_recipes_table.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/db/migrations/20250226135533_new_recipe_tags_table.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/db/migrations/20250226143220_test_data.sql" dialect="PostgreSQL" />
-    <file url="PROJECT" dialect="PostgreSQL" />
-  </component>
-</project>
