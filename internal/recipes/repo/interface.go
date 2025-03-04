@@ -18,6 +18,8 @@ type RecipeRepo interface {
 	RecipeByName(ctx context.Context, name string) (*dto.Recipe, error)
 	RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, error)
 	RecipesByBudget(ctx context.Context, budget int) ([]dto.Recipe, error)
+	// TODO: implement this
+	RecipesByTagsAndBudget(ctx context.Context, budget int, tags ...int) ([]dto.Recipe, error)
 }
 
 type TagsRepo interface {
