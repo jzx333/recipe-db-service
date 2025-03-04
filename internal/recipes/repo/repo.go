@@ -27,8 +27,8 @@ var (
 			PlaceholderFormat(sq.Dollar)
 
 	recipesAllQuery = sq.Select("r.id", "r.name", "r.calories", "r.time", "r.budget",
-		"string_agg(distinct t.name, ', ') as tags", "r.ingredients",
-		"r.steps", "r.imgsrc", "r.created_at").
+		"json_agg(json_build_object('id', t.id, 'name', t.name, 'emoji', t.emoji)) as tags",
+		"r.ingredients", "r.steps", "r.imgsrc", "r.created_at").
 		From("recipes r").
 		LeftJoin("recipe_tags rt on r.id = rt.recipe_id").
 		LeftJoin("tags t on rt.tag_id = t.id").

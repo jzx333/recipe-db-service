@@ -97,23 +97,23 @@ func main() {
 	//}
 	//fmt.Println(res3)
 
-	//res3, err := r.TagsAll(ctx)
-	//if err != nil {
-	//	log.Fatalf("Error fetching tags: %v", err)
-	//}
-	//
-	//for _, tag := range res3 {
-	//	fmt.Println(tag)
-	//}
-	//
-	//res4, err := r.RecipesAll(ctx)
-	//if err != nil {
-	//	log.Fatalf("Error fetching recipes: %v", err)
-	//}
-	//
-	//for _, recipe := range res4 {
-	//	fmt.Println(recipe)
-	//}
+	res3, err := r.TagsAll(ctx)
+	if err != nil {
+		log.Fatalf("Error fetching tags: %v", err)
+	}
+
+	for _, tag := range res3 {
+		fmt.Println(tag)
+	}
+
+	res4, err := r.RecipesAll(ctx)
+	if err != nil {
+		log.Fatalf("Error fetching recipes: %v", err)
+	}
+
+	for _, recipe := range res4 {
+		fmt.Println(recipe)
+	}
 
 	res5, err := r.RecipeByName(ctx, "fndfmnghm")
 	if err != nil {
