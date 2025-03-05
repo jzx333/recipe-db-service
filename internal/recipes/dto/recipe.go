@@ -83,3 +83,9 @@ type NewRecipe struct {
 	Steps       []Step       `db:"steps"`
 	ImgSrc      string       `db:"imgsrc"`
 }
+
+type RecipeFilter struct {
+	Name   string `db:"name"`
+	Tags   []int
+	Budget int `db:"budget"`
+}

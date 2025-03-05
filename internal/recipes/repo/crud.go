@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	"webServer/internal/recipes/dto"
 )
@@ -73,17 +72,17 @@ func (r *Repo) TagCreate(ctx context.Context, tag *dto.NewTag) (int, error) {
 	return id, nil
 }
 
-func (r *Repo) RecipesAll(ctx context.Context) ([]dto.Recipe, error) {
-	q, args := recipesAllQuery.MustSql()
-	fmt.Println(q, args)
-
-	var recipes []dto.Recipe
-	if err := r.db.SelectContext(ctx, &recipes, q, args...); err != nil {
-		return nil, err
-	}
-
-	return recipes, nil
-}
+//func (r *Repo) RecipesAll(ctx context.Context) ([]dto.Recipe, error) {
+//	q, args := recipesAllQuery.MustSql()
+//	fmt.Println(q, args)
+//
+//	var recipes []dto.Recipe
+//	if err := r.db.SelectContext(ctx, &recipes, q, args...); err != nil {
+//		return nil, err
+//	}
+//
+//	return recipes, nil
+//}
 
 func (r *Repo) RecipeCreate(ctx context.Context, recipe *dto.NewRecipe) (int, error) {
 	q, args, err := recipeCreateQuery.
@@ -130,39 +129,34 @@ func (r *Repo) RecipeById(ctx context.Context, id int) (*dto.Recipe, error) {
 
 }
 
-func (r *Repo) RecipeByName(ctx context.Context, name string) (*dto.Recipe, error) {
-	q, args := recipesAllQuery.Where(sq.Eq{"r.name": name}).Limit(1).MustSql()
+func (r *Repo) RecipesSearch(ctx context.Context, filter *dto.RecipeFilter) ([]dto.Recipe, error) {
+	var conditions []sq.Sqlizer
+	recipesSearchQuery := recipesAllQuery
 
-	var recipe dto.Recipe
-
-	if err := r.db.GetContext(ctx, &recipe, q, args...); err != nil {
-		return nil, ErrNotExist
+	if filter.Name != "" {
+		conditions = append(conditions, sq.Eq{"r.name": filter.Name})
 	}
 
-	return &recipe, nil
-}
+	if filter.Budget != 0 {
+		conditions = append(conditions, sq.Eq{"r.budget": filter.Budget})
+	}
 
-func (r *Repo) RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, error) {
-	q, args, err := recipesAllQuery.Where(sq.Eq{"rt.tag_id": tags}).
-		Having("count(distinct rt.tag_id) = ?", len(tags)).ToSql()
+	if len(filter.Tags) > 0 {
+		conditions = append(conditions, sq.Eq{"rt.tag_id": filter.Tags})
+		recipesSearchQuery = recipesSearchQuery.
+			Where(sq.And(conditions)).
+			Having("count(distinct rt.tag_id) = ?", len(filter.Tags))
+	} else {
+		recipesSearchQuery = recipesSearchQuery.
+			Where(sq.And(conditions))
+	}
+
+	q, args, err := recipesSearchQuery.ToSql()
 	if err != nil {
 		return nil, err
 	}
 
 	var recipes []dto.Recipe
-
-	if err := r.db.SelectContext(ctx, &recipes, q, args...); err != nil {
-		return nil, ErrNotExist
-	}
-
-	return recipes, nil
-}
-
-func (r *Repo) RecipesByBudget(ctx context.Context, budget int) ([]dto.Recipe, error) {
-	q, args := recipesAllQuery.Where(sq.Eq{"r.budget": budget}).MustSql()
-
-	var recipes []dto.Recipe
-
 	if err := r.db.SelectContext(ctx, &recipes, q, args...); err != nil {
 		return nil, ErrNotExist
 	}

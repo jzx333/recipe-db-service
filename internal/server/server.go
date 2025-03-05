@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
 	"strconv"
@@ -44,129 +45,56 @@ func Server(ctx context.Context, r *repo.Repo) {
 	router.Get("/previews", func(w http.ResponseWriter, router *http.Request) {
 
 		name := router.URL.Query().Get("name")
-		if name != "" {
-			recipe, err := r.RecipeByName(ctx, name)
-			if err != nil {
-				w.WriteHeader(422)
-				w.Write([]byte(err.Error()))
-			}
 
-			response := ResponsePreview{
+		tags := router.URL.Query()["tag"]
+
+		budget := router.URL.Query().Get("budget")
+
+		tagIds := make([]int, len(tags))
+		if len(tagIds) != 0 {
+			for i, tag := range tags {
+				tagIds[i], _ = strconv.Atoi(tag)
+			}
+		}
+		budgetInt, _ := strconv.Atoi(budget)
+
+		recipeQuery := RequestQuery{
+			Name:   name,
+			Tags:   tagIds,
+			Budget: budgetInt,
+		}
+
+		// log
+		fmt.Println(recipeQuery)
+
+		recipes, err := r.RecipesSearch(ctx, Converter(&recipeQuery))
+		if err != nil {
+			w.WriteHeader(422)
+			w.Write([]byte(err.Error()))
+		}
+
+		// log
+		fmt.Println(len(recipes))
+
+		response := make([]ResponsePreview, 0, len(recipes))
+		for _, recipe := range recipes {
+			response = append(response, ResponsePreview{
 				Id:     recipe.Id,
 				Name:   recipe.Name,
 				Time:   recipe.Time,
 				Budget: recipe.Budget,
 				Tags:   recipe.Tags,
 				ImgSrc: recipe.ImgSrc,
-			}
-
-			data, err := json.Marshal(response)
-			if err != nil {
-				w.WriteHeader(422)
-				w.Write([]byte(err.Error()))
-			}
-			w.Write(data)
-
+			})
 		}
 
-		tags := router.URL.Query()["tag"]
-		if len(tags) > 0 {
-			var tagIds []int
-
-			for i := 0; i < len(tags); i++ {
-				tagId, err := strconv.Atoi(tags[i])
-				if err != nil {
-					w.WriteHeader(500)
-					w.Write([]byte(err.Error()))
-				}
-				tagIds = append(tagIds, tagId)
-			}
-
-			recipes, err := r.RecipesByTags(ctx, tagIds...)
-			if err != nil {
-				w.WriteHeader(404)
-				w.Write([]byte(err.Error()))
-			}
-
-			var response []ResponsePreview
-			for _, recipe := range recipes {
-				response = append(response, ResponsePreview{
-					Id:     recipe.Id,
-					Name:   recipe.Name,
-					Time:   recipe.Time,
-					Budget: recipe.Budget,
-					Tags:   recipe.Tags,
-					ImgSrc: recipe.ImgSrc,
-				})
-			}
-
-			data, err := json.Marshal(response)
-			if err != nil {
-				w.WriteHeader(422)
-				w.Write([]byte(err.Error()))
-			}
-
-			w.Write(data)
+		data, err := json.Marshal(response)
+		if err != nil {
+			w.WriteHeader(422)
+			w.Write([]byte(err.Error()))
 		}
 
-		budget := router.URL.Query().Get("budget")
-		if budget != "" {
-			budgetInt, err := strconv.Atoi(budget)
-
-			recipes, err := r.RecipesByBudget(ctx, budgetInt)
-			if err != nil {
-				w.WriteHeader(404)
-				w.Write([]byte(err.Error()))
-			}
-
-			var response []ResponsePreview
-			for _, recipe := range recipes {
-				response = append(response, ResponsePreview{
-					Id:     recipe.Id,
-					Name:   recipe.Name,
-					Time:   recipe.Time,
-					Budget: recipe.Budget,
-					Tags:   recipe.Tags,
-					ImgSrc: recipe.ImgSrc,
-				})
-			}
-
-			data, err := json.Marshal(response)
-			if err != nil {
-				w.WriteHeader(422)
-				w.Write([]byte(err.Error()))
-			}
-
-			w.Write(data)
-		}
-
-		if name == "" && len(tags) == 0 && budget == "" {
-			recipes, err := r.RecipesAll(ctx)
-			if err != nil {
-				w.WriteHeader(500)
-				w.Write([]byte(err.Error()))
-			}
-
-			var response []ResponsePreview
-			for _, recipe := range recipes {
-				response = append(response, ResponsePreview{
-					Id:     recipe.Id,
-					Name:   recipe.Name,
-					Time:   recipe.Time,
-					Budget: recipe.Budget,
-					Tags:   recipe.Tags,
-					ImgSrc: recipe.ImgSrc,
-				})
-			}
-
-			data, err := json.Marshal(response)
-			if err != nil {
-				w.WriteHeader(422)
-				w.Write([]byte(err.Error()))
-			}
-
-			w.Write(data)
-		}
+		w.Write(data)
 
 	})
 

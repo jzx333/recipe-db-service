@@ -12,14 +12,9 @@ var (
 )
 
 type RecipeRepo interface {
-	RecipesAll(ctx context.Context) ([]dto.Recipe, error)
 	RecipeCreate(ctx context.Context, recipe *dto.Recipe) (int, error)
 	RecipeById(ctx context.Context, id int) (*dto.Recipe, error)
-	RecipeByName(ctx context.Context, name string) (*dto.Recipe, error)
-	RecipesByTags(ctx context.Context, tags ...int) ([]dto.Recipe, error)
-	RecipesByBudget(ctx context.Context, budget int) ([]dto.Recipe, error)
-	// TODO: implement this
-	RecipesByTagsAndBudget(ctx context.Context, budget int, tags ...int) ([]dto.Recipe, error)
+	RecipesSearch(ctx context.Context, filter *dto.RecipeFilter) ([]dto.Recipe, error)
 }
 
 type TagsRepo interface {
