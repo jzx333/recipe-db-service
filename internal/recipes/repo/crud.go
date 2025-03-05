@@ -72,18 +72,6 @@ func (r *Repo) TagCreate(ctx context.Context, tag *dto.NewTag) (int, error) {
 	return id, nil
 }
 
-//func (r *Repo) RecipesAll(ctx context.Context) ([]dto.Recipe, error) {
-//	q, args := recipesAllQuery.MustSql()
-//	fmt.Println(q, args)
-//
-//	var recipes []dto.Recipe
-//	if err := r.db.SelectContext(ctx, &recipes, q, args...); err != nil {
-//		return nil, err
-//	}
-//
-//	return recipes, nil
-//}
-
 func (r *Repo) RecipeCreate(ctx context.Context, recipe *dto.NewRecipe) (int, error) {
 	q, args, err := recipeCreateQuery.
 		Values(recipe.Name, recipe.Calories, recipe.Time, recipe.Budget, recipe.Ingredients,
