@@ -42,6 +42,22 @@ func Server(ctx context.Context, r *repo.Repo) {
 		w.Write(data)
 	})
 
+	router.Post("/tags", func(w http.ResponseWriter, router *http.Request) {
+
+		newTag := &RequestTag{}
+
+		json.NewDecoder(router.Body).Decode(newTag)
+
+		response, err := r.TagCreate(ctx, TagCreateConverter(newTag))
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		} else {
+			data, _ := json.Marshal(response)
+			w.Write(data)
+		}
+	})
+
 	router.Get("/previews", func(w http.ResponseWriter, router *http.Request) {
 
 		name := router.URL.Query().Get("name")
@@ -58,7 +74,7 @@ func Server(ctx context.Context, r *repo.Repo) {
 		}
 		budgetInt, _ := strconv.Atoi(budget)
 
-		recipeQuery := RequestQuery{
+		recipeQuery := RequestSearchQuery{
 			Name:   name,
 			Tags:   tagIds,
 			Budget: budgetInt,
@@ -67,7 +83,7 @@ func Server(ctx context.Context, r *repo.Repo) {
 		// log
 		fmt.Println(recipeQuery)
 
-		recipes, err := r.RecipesSearch(ctx, Converter(&recipeQuery))
+		recipes, err := r.RecipesSearch(ctx, RecipeSearchConverter(&recipeQuery))
 		if err != nil {
 			w.WriteHeader(422)
 			w.Write([]byte(err.Error()))
@@ -126,6 +142,10 @@ func Server(ctx context.Context, r *repo.Repo) {
 		}
 
 		w.Write(data)
+	})
+
+	router.Post("/previews", func(w http.ResponseWriter, router *http.Request) {
+
 	})
 
 	http.ListenAndServe(":8080", router)
