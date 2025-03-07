@@ -15,7 +15,7 @@ func main() {
 
 	// connect to db
 	ctx := context.Background()
-	dsn := "host=localhost port=5432 user=postgres password=prikolpronyra dbname=recipe_finder sslmode=disable"
+	dsn := "host=localhost port=5432 user=postgres password=admin dbname=recipe_finder sslmode=disable"
 	dbpool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)
