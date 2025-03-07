@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
@@ -24,17 +23,6 @@ func main() {
 	sqlxDB := sqlx.NewDb(nativeDB, "pgx")
 
 	r := repo.NewRepo(sqlxDB)
-
-	//nTag := dto.NewTag{
-	//	"Хайп",
-	//	"☠️",
-	//}
-	//
-	//res, err := r.TagCreate(ctx, &nTag)
-	//if err != nil {
-	//	log.Fatalf("Error creating tag: %v", err)
-	//}
-	//fmt.Println(res)
 
 	//ingr := []dto.Ingredient{
 	//	{"Колесо", "4 штуки"},
@@ -94,14 +82,14 @@ func main() {
 	//}
 	//fmt.Println(res3)
 
-	res3, err := r.TagsAll(ctx)
-	if err != nil {
-		log.Fatalf("Error fetching tags: %v", err)
-	}
-
-	for _, tag := range res3 {
-		fmt.Println(tag)
-	}
+	//res3, err := r.TagsAll(ctx)
+	//if err != nil {
+	//	log.Fatalf("Error fetching tags: %v", err)
+	//}
+	//
+	//for _, tag := range res3 {
+	//	fmt.Println(tag)
+	//}
 
 	server.Server(ctx, r)
 

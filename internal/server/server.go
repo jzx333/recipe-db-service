@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
 	"strconv"
+	"webServer/internal/recipes/dto"
 
 	"webServer/internal/recipes/repo"
 
@@ -145,6 +146,33 @@ func Server(ctx context.Context, r *repo.Repo) {
 	})
 
 	router.Post("/previews", func(w http.ResponseWriter, router *http.Request) {
+		recipeInput := RequestRecipe{}
+
+		json.NewDecoder(router.Body).Decode(&recipeInput)
+
+		newRecipe := dto.NewRecipe{
+			Name:        recipeInput.Name,
+			Tags:        make([]int, 0, len(recipeInput.Tags)),
+			Calories:    recipeInput.Calories,
+			Time:        recipeInput.Time,
+			Budget:      recipeInput.Budget,
+			Ingredients: recipeInput.Ingredients,
+			Steps:       recipeInput.Steps,
+			ImgSrc:      recipeInput.ImgSrc,
+		}
+
+		for _, tag := range recipeInput.Tags {
+			newRecipe.Tags = append(newRecipe.Tags, tag.Id)
+		}
+
+		recipeId, err := r.RecipeCreate(ctx, &newRecipe)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+		} else {
+			data, _ := json.Marshal(recipeId)
+			w.Write(data)
+		}
 
 	})
 
