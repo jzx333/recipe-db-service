@@ -18,12 +18,12 @@ func NewRepo(db *sqlx.DB) *Repo {
 
 var (
 	tagsAllQuery = sq.Select("t.id", "t.name", "t.emoji", "t.created_at").
-			From("tags t").
-			GroupBy("t.id", "t.name", "t.emoji", "t.created_at").
-			PlaceholderFormat(sq.Dollar)
+		From("tags t").
+		GroupBy("t.id", "t.name", "t.emoji", "t.created_at").
+		PlaceholderFormat(sq.Dollar)
 
 	tagCreateQuery = sq.Insert("tags").Columns("name", "emoji").
-			PlaceholderFormat(sq.Dollar)
+		PlaceholderFormat(sq.Dollar)
 
 	recipesAllQuery = sq.Select("r.id", "r.name", "r.calories", "r.time", "r.budget",
 		"json_agg(json_build_object('id', t.id, 'name', t.name, 'emoji', t.emoji)) as tags",
@@ -40,7 +40,7 @@ var (
 		PlaceholderFormat(sq.Dollar)
 
 	recipeRelQuery = sq.Insert("recipe_tags").
-			Columns("recipe_id", "tag_id").PlaceholderFormat(sq.Dollar)
+		Columns("recipe_id", "tag_id").PlaceholderFormat(sq.Dollar)
 )
 
 func (r *Repo) TagsAll(ctx context.Context) ([]dto.Tag, error) {
@@ -122,11 +122,11 @@ func (r *Repo) RecipesSearch(ctx context.Context, filter *dto.RecipeFilter) ([]d
 	recipesSearchQuery := recipesAllQuery
 
 	if filter.Name != "" {
-		conditions = append(conditions, sq.Eq{"r.name": filter.Name})
+		conditions = append(conditions, sq.Expr("r.name ilike ?", "%"+filter.Name+"%"))
 	}
 
 	if filter.Budget != 0 {
-		conditions = append(conditions, sq.Eq{"r.budget": filter.Budget})
+		conditions = append(conditions, sq.Expr("r.budget <= ?", filter.Budget))
 	}
 
 	if len(filter.Tags) > 0 {
