@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: Recipe API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /tags:
+    get:
+      summary: Получить список всех тегов
+      responses:
+        '200':
+          description: Список тегов
+    post:
+      summary: Создать новый тег
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                emoji:
+                  type: string
+      responses:
+        '200':
+          description: Тег успешно создан
+
+  /previews:
+    get:
+      summary: Поиск рецептов
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: budget
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список рецептов
+    post:
+      summary: Создать новый рецепт
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                calories:
+                  type: integer
+                time:
+                  type: integer
+                budget:
+                  type: integer
+                tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                ingredients:
+                  type: array
+                  items:
+                    type: string
+                steps:
+                  type: array
+                  items:
+                    type: string
+                imgSrc:
+                  type: string
+      responses:
+        '200':
+          description: Идентификатор созданного рецепта
+
+  /previews/{id}:
+    get:
+      summary: Получить рецепт по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Подробности рецепта
+        '404':
+          description: Рецепт не найден
