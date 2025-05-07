@@ -30,9 +30,11 @@ func TagCreateConverter(query *RequestTag) *dto.NewTag {
 
 func RecipeSearchConverter(query *RequestSearchQuery) *dto.RecipeFilter {
 	filter := &dto.RecipeFilter{
-		Name:   query.Name,
-		Tags:   query.Tags,
-		Budget: query.Budget,
+		Name:     query.Name,
+		Tags:     query.Tags,
+		Budget:   query.Budget,
+		Time:     query.Time,
+		Calories: query.Calories,
 	}
 
 	return filter

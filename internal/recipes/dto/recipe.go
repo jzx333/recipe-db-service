@@ -85,7 +85,9 @@ type NewRecipe struct {
 }
 
 type RecipeFilter struct {
-	Name   string `db:"name"`
-	Tags   []int
-	Budget int `db:"budget"`
+	Name     string `db:"name"`
+	Tags     []int
+	Budget   int `db:"budget"`
+	Time     int `db:"time"`
+	Calories int `db:"calories"`
 }

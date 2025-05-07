@@ -67,6 +67,10 @@ func Server(ctx context.Context, r *repo.Repo) {
 
 		budget := router.URL.Query().Get("budget")
 
+		time := router.URL.Query().Get("time")
+
+		calories := router.URL.Query().Get("calories")
+
 		tagIds := make([]int, len(tags))
 		if len(tagIds) != 0 {
 			for i, tag := range tags {
@@ -74,11 +78,15 @@ func Server(ctx context.Context, r *repo.Repo) {
 			}
 		}
 		budgetInt, _ := strconv.Atoi(budget)
+		timeInt, _ := strconv.Atoi(time)
+		caloriesInt, _ := strconv.Atoi(calories)
 
 		recipeQuery := RequestSearchQuery{
-			Name:   name,
-			Tags:   tagIds,
-			Budget: budgetInt,
+			Name:     name,
+			Tags:     tagIds,
+			Budget:   budgetInt,
+			Time:     timeInt,
+			Calories: caloriesInt,
 		}
 
 		// log

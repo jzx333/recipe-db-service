@@ -129,6 +129,14 @@ func (r *Repo) RecipesSearch(ctx context.Context, filter *dto.RecipeFilter) ([]d
 		conditions = append(conditions, sq.Expr("r.budget <= ?", filter.Budget))
 	}
 
+	if filter.Time != 0 {
+		conditions = append(conditions, sq.Expr("r.time <= ?", filter.Time))
+	}
+
+	if filter.Calories != 0 {
+		conditions = append(conditions, sq.Expr("r.calories <= ?", filter.Calories))
+	}
+
 	if len(filter.Tags) > 0 {
 		conditions = append(conditions, sq.Eq{"rt.tag_id": filter.Tags})
 		recipesSearchQuery = recipesSearchQuery.

@@ -25,7 +25,9 @@ type RequestRecipe struct {
 }
 
 type RequestSearchQuery struct {
-	Name   string
-	Tags   []int
-	Budget int
+	Name     string
+	Tags     []int
+	Budget   int
+	Time     int
+	Calories int
 }
